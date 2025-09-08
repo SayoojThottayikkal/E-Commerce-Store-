@@ -7,7 +7,7 @@ import { notFound, errorHandler } from "./middlewares/error.js";
 import authRoutes from "./routes/authroutes.js";
 import productRoutes from "./routes/productroutes.js";
 import orderRoutes from "./routes/orderroutes.js";
-
+import path from "path";
 dotenv.config();
 const app = express();
 connectDB();
@@ -15,7 +15,7 @@ connectDB();
 app.use(cors({ origin: process.env.CLIENT_URL, credentials: true }));
 app.use(express.json());
 app.use(morgan("dev"));
-
+app.use("/uploads", express.static(path.join(path.resolve(), "uploads")));
 app.get("/", (_, res) => res.json({ status: "ok", service: "ecom-api" }));
 
 app.use("/api/auth", authRoutes);

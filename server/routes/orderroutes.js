@@ -13,7 +13,6 @@ const router = Router();
 router.post("/", protect, placeOrder);
 router.get("/mine", protect, myOrders);
 
-// Admin
 router.get("/", protect, isAdmin, allOrders);
 router.put("/:id", protect, isAdmin, updateOrderStatus);
 router.get("/stats/summary", protect, isAdmin, adminStats);
