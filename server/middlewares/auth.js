@@ -11,6 +11,8 @@ export const protect = async (req, res, next) => {
       return res.status(401).json({ message: "Not authorized, no token" });
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log("Decoded token:", decoded);
+
     const user = await User.findById(decoded.id).select("+password");
     if (!user) return res.status(401).json({ message: "User not found" });
 
@@ -20,8 +22,11 @@ export const protect = async (req, res, next) => {
       email: user.email,
       name: user.name,
     };
+    console.log("req.user set:", req.user);
+
     next();
   } catch (e) {
+    console.error(e);
     res.status(401).json({ message: "Not authorized, token failed" });
   }
 };

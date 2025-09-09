@@ -7,7 +7,7 @@ import Products from "./pages/Products";
 import ProductDetails from "./pages/ProductDetails";
 import Cart from "./pages/Cart";
 import Wishlist from "./pages/Wishlist";
-import CheckoutAddress from "./pages/CheckoutAddress";
+import CheckoutDetails from "./pages/CheckoutDetails";
 import CheckoutReview from "./pages/CheckoutReview";
 import OrderSuccess from "./pages/OrderSuccess";
 import MyOrders from "./pages/MyOrders";
@@ -51,7 +51,7 @@ const App = () => {
               path="/checkout/address"
               element={
                 <ProtectedRoute>
-                  <CheckoutAddress />
+                  <CheckoutDetails />
                 </ProtectedRoute>
               }
             />

@@ -2,7 +2,7 @@ import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { logout } from "../store/slices/authSlice";
-import { Heart, ShoppingBasket, ShoppingCart } from "lucide-react";
+import { Heart, ListOrdered, ShoppingBasket, ShoppingCart } from "lucide-react";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -53,6 +53,9 @@ const Navbar = () => {
             <>
               <Link to="/products" className="hover:text-blue-600">
                 <ShoppingBasket />
+              </Link>
+              <Link to="/orders" className="hover:text-blue-600">
+                <ListOrdered />
               </Link>
               <Link to="/wishlist" className="relative hover:text-blue-600">
                 <Heart />

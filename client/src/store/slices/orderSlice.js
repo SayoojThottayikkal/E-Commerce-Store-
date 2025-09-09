@@ -6,11 +6,11 @@ export const getMyOrders = createAsyncThunk(
   "orders/myOrders",
   async (_, { rejectWithValue }) => {
     try {
-      const res = await myOrdersApi();
-      return res.data;
+      const data = await myOrdersApi();
+      return data;
     } catch (err) {
       toast.error("Failed to load orders");
-      return rejectWithValue(err.response.data);
+      return rejectWithValue(err.response?.data || err.message);
     }
   }
 );

@@ -5,7 +5,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState(null);
 
   useEffect(() => {
-    adminStats().then((res) => setStats(res.data));
+    adminStats().then((res) => setStats(res));
   }, []);
 
   return (

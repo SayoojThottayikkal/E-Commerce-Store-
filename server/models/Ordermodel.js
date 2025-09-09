@@ -27,11 +27,16 @@ const orderSchema = new mongoose.Schema(
       postalCode: String,
       country: String,
     },
-    total: Number,
+    total: { type: Number, required: true },
     status: {
       type: String,
       enum: ["Processing", "Shipped", "Delivered"],
       default: "Processing",
+    },
+    paymentMethod: {
+      type: String,
+      enum: ["COD", "Card", "UPI"],
+      required: true,
     },
   },
   { timestamps: true }

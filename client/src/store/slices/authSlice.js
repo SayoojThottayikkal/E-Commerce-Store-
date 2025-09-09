@@ -2,6 +2,18 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { loginApi, registerApi, meApi } from "../../api/authApi";
 import toast from "../../utils/toast";
 
+export const loadUser = createAsyncThunk(
+  "auth/me",
+  async (_, { rejectWithValue }) => {
+    try {
+      const res = await meApi();
+      return res.user;
+    } catch (err) {
+      return rejectWithValue(err.response?.data);
+    }
+  }
+);
+
 export const login = createAsyncThunk(
   "auth/login",
   async (data, { dispatch, rejectWithValue }) => {
@@ -9,11 +21,9 @@ export const login = createAsyncThunk(
       const res = await loginApi(data);
       localStorage.setItem("token", res.token);
 
-      if (!res.user) {
-        await dispatch(loadUser());
-      }
+      const userRes = await dispatch(loadUser()).unwrap();
 
-      return res;
+      return { token: res.token, user: userRes };
     } catch (err) {
       toast.error(
         err.response?.data?.message ||
@@ -30,21 +40,10 @@ export const register = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const res = await registerApi(data);
+      toast.success("Registered successfully");
       return res;
     } catch (err) {
       toast.error(err.response?.data?.message || "Register failed");
-      return rejectWithValue(err.response?.data);
-    }
-  }
-);
-
-export const loadUser = createAsyncThunk(
-  "auth/me",
-  async (_, { rejectWithValue }) => {
-    try {
-      const res = await meApi();
-      return res;
-    } catch (err) {
       return rejectWithValue(err.response?.data);
     }
   }
@@ -74,13 +73,9 @@ const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
-
-        if (action.payload.user) {
-          state.user = action.payload.user;
-        }
+        state.user = action.payload.user;
         state.token = action.payload.token;
         state.isAuthenticated = true;
-        toast.success("Login successful");
       })
       .addCase(login.rejected, (state) => {
         state.loading = false;
@@ -92,14 +87,13 @@ const authSlice = createSlice({
       })
       .addCase(register.fulfilled, (state) => {
         state.loading = false;
-        toast.success("Registered successfully");
       })
       .addCase(register.rejected, (state) => {
         state.loading = false;
       })
 
       .addCase(loadUser.fulfilled, (state, action) => {
-        state.user = action.payload.user;
+        state.user = action.payload;
         state.isAuthenticated = true;
       })
       .addCase(loadUser.rejected, (state) => {
