@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyOrders } from "../store/slices/orderSlice";
+import { getMyOrders } from "../store/slices/customerOrderSlice";
 
 const MyOrders = () => {
   const dispatch = useDispatch();
-  const { myOrders = [], loading } = useSelector((state) => state.orders);
+  const { myOrders = [], loading } = useSelector(
+    (state) => state.customerOrders
+  );
 
   useEffect(() => {
     dispatch(getMyOrders());

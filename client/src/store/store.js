@@ -4,7 +4,7 @@ import productReducer from "./slices/productSlice";
 import orderReducer from "./slices/orderSlice";
 import cartReducer from "./slices/cartSlice";
 import wishlistReducer from "./slices/wishlistSlice";
-
+import customerOrderReducer from "./slices/customerOrderSlice.js";
 const store = configureStore({
   reducer: {
     auth: authReducer,
@@ -12,6 +12,7 @@ const store = configureStore({
     orders: orderReducer,
     cart: cartReducer,
     wishlist: wishlistReducer,
+    customerOrders: customerOrderReducer,
   },
 });
 

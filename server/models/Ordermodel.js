@@ -43,10 +43,9 @@ const orderSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-orderSchema.pre("save", async function (next) {
+orderSchema.pre("save", function (next) {
   if (!this.orderNumber) {
-    const lastOrder = await this.constructor.findOne().sort("-orderNumber");
-    this.orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1000;
+    this.orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
   }
   next();
 });

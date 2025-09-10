@@ -34,13 +34,16 @@ export const placeOrder = async (req, res) => {
 
 export const myOrders = async (req, res) => {
   try {
-    const orders = await Order.find({ user: req.user._id }).sort("-createdAt");
+    console.log("req.user:", req.user);
+    console.log("req.user.id:", req.user.id);
+
+    const orders = await Order.find({ user: req.user.id }).sort("-createdAt");
+    console.log("orders found:", orders.length);
     res.json(orders);
   } catch (err) {
     res.status(500).json({ message: "Failed to fetch orders" });
   }
 };
-
 export const allOrders = async (req, res) => {
   try {
     const { status, from, to } = req.query;
