@@ -17,6 +17,7 @@ const orderItemSchema = new mongoose.Schema(
 
 const orderSchema = new mongoose.Schema(
   {
+    orderNumber: { type: String, unique: true },
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     items: [orderItemSchema],
     shippingAddress: {
@@ -41,5 +42,13 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+orderSchema.pre("save", async function (next) {
+  if (!this.orderNumber) {
+    const lastOrder = await this.constructor.findOne().sort("-orderNumber");
+    this.orderNumber = lastOrder ? lastOrder.orderNumber + 1 : 1000;
+  }
+  next();
+});
 
 export default mongoose.model("Order", orderSchema);

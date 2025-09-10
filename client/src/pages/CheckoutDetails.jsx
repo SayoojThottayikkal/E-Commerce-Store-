@@ -3,16 +3,24 @@ import { useNavigate } from "react-router-dom";
 
 const CheckoutDetails = () => {
   const [address, setAddress] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
+  const [postalCode, setPostalCode] = useState("");
+  const [country, setCountry] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("COD");
+
   const navigate = useNavigate();
 
   const handleNext = () => {
-    if (!address) {
-      alert("Please enter your address");
+    if (!address || !city || !state || !postalCode || !country) {
+      alert("Please fill in all shipping fields");
       return;
     }
-    localStorage.setItem("checkoutAddress", address);
+
+    const shippingData = { address, city, state, postalCode, country };
+    localStorage.setItem("checkoutAddress", JSON.stringify(shippingData));
     localStorage.setItem("checkoutPayment", paymentMethod);
+
     navigate("/checkout/review");
   };
 
@@ -22,50 +30,62 @@ const CheckoutDetails = () => {
 
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2">Shipping Address</h3>
-        <textarea
-          className="w-full border p-2 rounded"
-          rows="4"
+
+        <input
+          className="w-full border p-2 rounded mb-3"
+          placeholder="Street Address"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          placeholder="Enter your delivery address..."
+        />
+
+        <input
+          className="w-full border p-2 rounded mb-3"
+          placeholder="City"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
+
+        <input
+          className="w-full border p-2 rounded mb-3"
+          placeholder="State"
+          value={state}
+          onChange={(e) => setState(e.target.value)}
+        />
+
+        <input
+          className="w-full border p-2 rounded mb-3"
+          placeholder="Postal Code"
+          value={postalCode}
+          onChange={(e) => setPostalCode(e.target.value)}
+        />
+
+        <input
+          className="w-full border p-2 rounded"
+          placeholder="Country"
+          value={country}
+          onChange={(e) => setCountry(e.target.value)}
         />
       </div>
 
       <div className="mb-6">
         <h3 className="text-lg font-semibold mb-2">Payment Method</h3>
         <div className="space-y-3">
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="COD"
-              checked={paymentMethod === "COD"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            Cash on Delivery
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="Card"
-              checked={paymentMethod === "Card"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            Credit / Debit Card
-          </label>
-
-          <label className="flex items-center gap-2">
-            <input
-              type="radio"
-              name="payment"
-              value="UPI"
-              checked={paymentMethod === "UPI"}
-              onChange={(e) => setPaymentMethod(e.target.value)}
-            />
-            UPI
-          </label>
+          {["COD", "Card", "UPI"].map((method) => (
+            <label key={method} className="flex items-center gap-2">
+              <input
+                type="radio"
+                name="payment"
+                value={method}
+                checked={paymentMethod === method}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+              {method === "COD"
+                ? "Cash on Delivery"
+                : method === "Card"
+                ? "Credit / Debit Card"
+                : "UPI"}
+            </label>
+          ))}
         </div>
       </div>
 

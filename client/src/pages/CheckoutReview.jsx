@@ -7,7 +7,9 @@ import toast from "../utils/toast";
 const CheckoutReview = () => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.auth);
-  const address = localStorage.getItem("checkoutAddress") || "";
+  const addressData = JSON.parse(
+    localStorage.getItem("checkoutAddress") || "{}"
+  );
   const payment = localStorage.getItem("checkoutPayment") || "";
   const [loading, setLoading] = useState(false);
 
@@ -17,7 +19,7 @@ const CheckoutReview = () => {
       return;
     }
 
-    if (!address) {
+    if (!addressData.address) {
       toast.error("Please provide a shipping address");
       return;
     }
@@ -40,16 +42,15 @@ const CheckoutReview = () => {
 
     const orderData = {
       items: items.map((i) => ({
-        productId: i._id,
+        product: i._id,
+        title: i.title,
+        price: i.price,
         qty: i.quantity,
+        image: i.image,
       })),
       shippingAddress: {
         name: user.name || "Customer",
-        address,
-        city: "",
-        state: "",
-        postalCode: "",
-        country: "",
+        ...addressData,
       },
       total,
       paymentMethod: payment,
@@ -81,7 +82,8 @@ const CheckoutReview = () => {
         <p className="mb-2">
           <strong>Shipping Address:</strong>
           <br />
-          {address || "No address provided"}
+          {addressData.address}, {addressData.city}, {addressData.state},{" "}
+          {addressData.postalCode}, {addressData.country}
         </p>
         <p>
           <strong>Payment Method:</strong> {payment || "Not selected"}

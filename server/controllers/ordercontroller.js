@@ -8,13 +8,13 @@ export const placeOrder = async (req, res) => {
 
     const { items, shippingAddress, total, paymentMethod } = req.body;
 
-    const orderNumber = `ORD-${Date.now()}`;
+    const orderNumber = `ORD-${Date.now()}-${Math.floor(Math.random() * 1000)}`;
 
     const order = await Order.create({
       user: req.user.id,
       orderNumber,
       items: items.map((it) => ({
-        product: it.productId,
+        product: it.product,
         qty: it.qty,
         title: it.title,
         price: it.price,
