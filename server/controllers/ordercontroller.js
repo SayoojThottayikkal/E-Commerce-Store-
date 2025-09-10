@@ -1,6 +1,6 @@
 import Order from "../models/Ordermodel.js";
 import Product from "../models/Productmodel.js";
-
+import User from "../models/Usermodel.js";
 export const placeOrder = async (req, res) => {
   try {
     if (!req.user?.id)
@@ -80,6 +80,15 @@ export const updateOrderStatus = async (req, res) => {
 
 export const adminStats = async (req, res) => {
   try {
+    const totalOrders = await Order.countDocuments();
+
+    const salesAgg = await Order.aggregate([
+      { $group: { _id: null, total: { $sum: "$total" } } },
+    ]);
+    const totalSales = salesAgg[0]?.total || 0;
+
+    const totalUsers = await User.countDocuments();
+
     const byDay = await Order.aggregate([
       {
         $group: {
@@ -96,8 +105,9 @@ export const adminStats = async (req, res) => {
       .limit(5)
       .select("title soldCount");
 
-    res.json({ byDay, bestSellers });
+    res.json({ totalOrders, totalSales, totalUsers, byDay, bestSellers });
   } catch (err) {
+    console.error("Admin stats error:", err);
     res.status(500).json({ message: "Failed to get stats" });
   }
 };
